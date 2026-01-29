@@ -6,6 +6,16 @@
 
 ---
 
+## 🔑 핵심 기여 (Key Contributions)
+
+- 불완전 라벨(`NaN`, `-1`)을 고려한 **Mask 기반 BCE 학습 설계**
+- 클래스 내부 불균형을 완화하기 위한 **pos_weight 적용 전략**
+- ResNet50 + EfficientNet-B1 **앙상블을 통한 확률 예측 안정화**
+- 의료 환경을 고려한 **Recall 제약 기반 Class-wise 임계값 최적화**
+- Grad-CAM을 활용한 **모델 의사결정 해석 및 한계 분석**
+
+---
+
 ## 1. Motivation
 
 흉부 X-ray 다중 라벨 문제는 다음과 같은 구조적 난점을 갖는다.
@@ -287,7 +297,112 @@ Recall을 0.9 이상으로 강화할 경우 Precision 감소가 전반적으로 
 
 ---
 
-## 10. Conclusion
+## 10. Model Interpretation with Grad-CAM
+
+단순 성능 지표(AUROC, AUPRC)뿐 아니라, 모델이 실제로 **어디를 근거로 판단했는지**를 분석하기 위해 Grad-CAM을 적용하였다.  
+
+예측 결과는 앙상블(ResNet50 + EfficientNet-B1) 기반으로 도출하였으며,  
+시각화는 공간적 해석이 상대적으로 안정적인 **ResNet50 모델을 기준으로 수행하였다.**
+
+앙상블 기반 예측과 `Recall ≥ 0.85` 조건에서 도출된 class-wise threshold를 적용한 테스트 결과 중 대표 사례 5개를 선정하여 시각화하였다.
+
+---
+
+### 10.1 Stable Class – Localized Attention
+
+#### (1) Pleural Effusion — TP
+
+<p align="center">
+  <img src="assets/gradcam/pleural_effusion_tp.png" width="420">
+</p>
+
+Pleural Effusion은 비교적 국소적으로 나타나는 병변 특성을 가지며, 
+Grad-CAM에서도 흉막 주변 영역이 강조되는 경향이 관찰되었다.  
+
+이는 모델이 실제 병변 위치와 일치하는 부위를 기반으로 판단했을 가능성을 시사한다.  
+
+해당 사례는 안정 클래스에서 모델의 공간적 주의(attention)가 
+의학적으로 타당한 위치에 형성되었을 수 있음을 보여주는 예로 해석될 수 있다.
+
+---
+
+#### (2) Lung Opacity — TP
+
+<p align="center">
+  <img src="assets/gradcam/lung_opacity_tp.png" width="420">
+</p>
+
+Lung Opacity 클래스는 높은 Precision과 Recall을 보였으나, 
+Grad-CAM 상에서 특정 국소 부위가 강하게 강조되지는 않았다.  
+
+이는 해당 질병이 국소 병변보다는 폐 전반의 밀도 변화 및 
+texture 패턴과 연관될 수 있기 때문일 가능성이 있다.  
+다만, Grad-CAM은 공간적 주의 분포를 정성적으로 보여주는 도구이므로 
+전역적 판단 여부를 단정적으로 해석하기에는 한계가 있다.
+
+---
+
+### 10.2 Unstable Class – Misleading or Weak Attention
+
+#### (3) Pneumothorax — FP
+
+<p align="center">
+  <img src="assets/gradcam/pneumothorax_fp.png" width="420">
+</p>
+
+해당 사례는 False Positive로 분류된 경우이며, 
+Grad-CAM은 병변과 직접적인 관련이 낮아 보이는 구조적 경계 부위를 강조하는 양상이 관찰되었다.  
+
+이는 모델이 실제 병변이 아닌 영상의 구조적 특성이나 
+주변 패턴을 기반으로 판단했을 가능성을 시사한다.  
+
+이러한 경향은 불안정 클래스에서 Precision 저하와 
+연관되어 있을 수 있는 사례로 해석될 수 있다.
+
+---
+
+#### (4) Pneumonia — FP
+
+<p align="center">
+  <img src="assets/gradcam/pneumonia_fp.png" width="420">
+</p>
+
+Pneumonia 클래스는 Recall을 확보하기 위해 상대적으로 낮은 threshold가 적용되었으며, 그 결과 일부 음성 사례에서 과도한 양성 판정이 발생하였다.  
+Grad-CAM에서는 명확한 병변 강조가 나타나지 않았으며, 이는 모델이 확신이 낮은 상태에서 양성으로 판단했을 가능성을 시사한다.  
+이는 해당 클래스의 예측 안정성이 낮음을 보여주는 사례이다.
+
+---
+
+### 10.3 Missed Case – False Negative
+
+#### (5) Pneumonia — FN
+
+<p align="center">
+  <img src="assets/gradcam/pneumonia_fn.png" width="420">
+</p>
+
+해당 사례는 Ground Truth가 양성이지만 모델이 음성으로 판단한 경우이다.  
+Grad-CAM에서 병변 부위에 대한 뚜렷한 강조가 나타나지 않았으며, 이는 모델이 해당 병변을 특징 공간에서 충분히 분리하지 못했음을 시사한다.  
+이는 Pneumonia 클래스에서의 구조적 한계를 보여주는 사례로 해석된다.
+
+---
+
+### Summary of Interpretation
+
+- 안정 클래스에서는 병변 위치와 일치하는 공간적 주의가 형성되었다.
+- Lung Opacity는 전역적 texture 기반 판단 특성으로 인해 국소적 강조가 뚜렷하지 않을 수 있다.
+- 불안정 클래스에서는 병변과 무관한 영역이 강조되거나 주의 집중이 약하게 나타났다.
+- False Negative 사례는 모델이 특정 병변 패턴을 충분히 학습하지 못했음을 시사한다.
+- Grad-CAM 결과는 단일 모델(ResNet50) 기준 해석이며,
+  앙상블 모델의 공간적 결정 경계와는 차이가 있을 수 있다.
+  또한 Grad-CAM은 gradient 기반 시각화 기법으로,
+  모델의 실제 인과적 판단 과정을 완전히 설명하지는 못한다.
+  
+Grad-CAM 결과는 단순한 성능 비교를 넘어, 클래스별로 서로 다른 의사결정 구조가 형성되어 있음을 보여준다.
+
+---
+
+## 11. Conclusion
 
 본 프로젝트는 단순한 모델 비교가 아니라,
 
@@ -305,7 +420,7 @@ Recall 기반 임계값 전략은 의료 환경에서 합리적인 의사결정 
 
 ---
 
-## 11. Future Work
+## 12. Future Work
 
 - 클래스별 샘플 불균형에 대한 직접적 대응 (Oversampling / Focal Loss)
 - Hard example mining 도입
@@ -320,7 +435,7 @@ Recall 기반 임계값 전략은 의료 환경에서 합리적인 의사결정 
 
 ```
 .
-├── assets/                      # 학습 곡선 및 성능 시각화 이미지
+├── assets/                      # 학습 곡선 및 성능 시각화 이미지 / Grad-CAM 시각화 결과
 ├── src/
 │   ├── config.py                # 하이퍼파라미터 및 학습 설정 관리
 │   ├── data.py                  # 데이터 로딩 및 split 구성
@@ -338,6 +453,7 @@ Recall 기반 임계값 전략은 의료 환경에서 합리적인 의사결정 
 ├── test_efficientnet.py         # EfficientNet-B1 테스트 평가
 ├── ensemble_alpha_search.py     # Validation 기반 alpha 탐색
 ├── ensemble_threshold_search.py # Recall 제약 기반 threshold 탐색
+├── gradcam_analysis.py          # 앙상블 기반 사례 선정 + Grad-CAM 실행
 ├── check_split.py               # train/val/test 분할 검증
 ├── eda_labels.py                # 라벨 분포 EDA 분석
 ├── README.md
