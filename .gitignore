@@ -1,0 +1,21 @@
+﻿# dataset
+cxr_export/
+images_224/
+
+# experiment workspace
+main/
+
+# logs
+wandb/
+log/
+
+# weights
+*.pth
+
+# cache
+__pycache__/
+.ipynb_checkpoints/
+
+# system
+.DS_Store
+label_chexpert.csv
