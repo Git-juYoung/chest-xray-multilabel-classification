@@ -313,7 +313,7 @@ Recall을 0.9 이상으로 강화할 경우 Precision 감소가 전반적으로 
 #### (1) Pleural Effusion — TP
 
 <p align="center">
-  <img src="assets/Pleural Effusion_TP.png" width="420">
+  <img src="assets/Pleural Effusion_TP.png" width="340">
 </p>
 
 Pleural Effusion은 비교적 국소적으로 나타나는 병변 특성을 가지며, 
@@ -329,7 +329,7 @@ Grad-CAM에서도 흉막 주변 영역이 강조되는 경향이 관찰되었다
 #### (2) Lung Opacity — TP
 
 <p align="center">
-  <img src="assets/Lung Opacity_TP.png" width="420">
+  <img src="assets/Lung Opacity_TP.png" width="340">
 </p>
 
 Lung Opacity 클래스는 높은 Precision과 Recall을 보였으나, 
@@ -347,7 +347,7 @@ texture 패턴과 연관될 수 있기 때문일 가능성이 있다.
 #### (3) Pneumothorax — FP
 
 <p align="center">
-  <img src="assets/Pneumothorax_FP.png" width="420">
+  <img src="assets/Pneumothorax_FP.png" width="340">
 </p>
 
 해당 사례는 False Positive로 분류된 경우이며, 
@@ -364,7 +364,7 @@ Grad-CAM은 병변과 직접적인 관련이 낮아 보이는 구조적 경계 �
 #### (4) Pneumonia — FP
 
 <p align="center">
-  <img src="assets/Pneumonia_FP.png" width="420">
+  <img src="assets/Pneumonia_FP.png" width="340">
 </p>
 
 Pneumonia 클래스는 Recall을 확보하기 위해 상대적으로 낮은 threshold가 적용되었으며, 그 결과 일부 음성 사례에서 과도한 양성 판정이 발생하였다.  
@@ -378,7 +378,7 @@ Grad-CAM에서는 명확한 병변 강조가 나타나지 않았으며, 이는 �
 #### (5) Pneumonia — FN
 
 <p align="center">
-  <img src="assets/Pneumonia_FN.png" width="420">
+  <img src="assets/Pneumonia_FN.png" width="340">
 </p>
 
 해당 사례는 Ground Truth가 양성이지만 모델이 음성으로 판단한 경우이다.  
