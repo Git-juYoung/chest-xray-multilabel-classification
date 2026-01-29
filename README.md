@@ -306,6 +306,8 @@ Recall을 0.9 이상으로 강화할 경우 Precision 감소가 전반적으로 
 
 앙상블 기반 예측과 `Recall ≥ 0.85` 조건에서 도출된 class-wise threshold를 적용한 테스트 결과 중 대표 사례 5개를 선정하여 시각화하였다.
 
+대표 사례는 안정 클래스 2개(TP), 불안정 클래스 2개(FP), 그리고 False Negative 1개로 구성하여, 클래스 안정성과 오류 유형을 함께 분석할 수 있도록 선정하였다.
+
 ---
 
 ### 10.1 Stable Class – Localized Attention
