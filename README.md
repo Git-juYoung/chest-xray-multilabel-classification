@@ -121,16 +121,22 @@
 ### 6.2 Learning Curves (assets)
 
 #### ResNet50
-![ResNet Train Loss](assets/resnet_train_loss.png)
-![ResNet Val Loss](assets/resnet_val_loss.png)
-![ResNet Val AUROC](assets/resnet_val_auroc.png)
-![ResNet Val AUPRC](assets/resnet_val_auprc.png)
+
+<p align="center">
+  <img src="assets/resnet_train_loss.png" width="24%">
+  <img src="assets/resnet_val_loss.png" width="24%">
+  <img src="assets/resnet_val_auroc.png" width="24%">
+  <img src="assets/resnet_val_auprc.png" width="24%">
+</p>
 
 #### EfficientNet-B1
-![EfficientNet Train Loss](assets/efficientnet_train_loss.png)
-![EfficientNet Val Loss](assets/efficientnet_val_loss.png)
-![EfficientNet Val AUROC](assets/efficientnet_val_auroc.png)
-![EfficientNet Val AUPRC](assets/efficientnet_val_auprc.png)
+
+<p align="center">
+  <img src="assets/efficientnet_train_loss.png" width="24%">
+  <img src="assets/efficientnet_val_loss.png" width="24%">
+  <img src="assets/efficientnet_val_auroc.png" width="24%">
+  <img src="assets/efficientnet_val_auprc.png" width="24%">
+</p>
 
 ---
 
