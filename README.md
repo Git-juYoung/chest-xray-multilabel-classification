@@ -316,30 +316,30 @@ Recall 기반 임계값 전략은 의료 환경에서 합리적인 의사결정 
 
 ---
 
-## 12. Repository Structure
+## Project Structure
 
 ```
 .
-├── assets/
+├── assets/                      # 학습 곡선 및 성능 시각화 이미지
 ├── src/
-│   ├── config.py
-│   ├── data.py
-│   ├── dataset.py
-│   ├── models.py
-│   ├── engine.py
-│   ├── evaluate.py
-│   ├── transforms.py
-│   ├── train_utils.py
-│   └── early_stopping.py
+│   ├── config.py                # 하이퍼파라미터 및 학습 설정 관리
+│   ├── data.py                  # 데이터 로딩 및 split 구성
+│   ├── dataset.py               # Custom Dataset 정의 (mask 포함)
+│   ├── models.py                # ResNet50 / EfficientNet-B1 모델 구성
+│   ├── engine.py                # train / validation 루프 정의
+│   ├── evaluate.py              # AUROC, AUPRC 등 평가 지표 계산
+│   ├── transforms.py            # 데이터 전처리 및 augmentation 정의
+│   ├── train_utils.py           # masked BCE 및 pos_weight 계산 함수
+│   └── early_stopping.py        # EarlyStopping 클래스 구현
 │
-├── train_resnet.py
-├── train_efficientnet.py
-├── test_resnet.py
-├── test_efficientnet.py
-├── ensemble_alpha_search.py
-├── ensemble_threshold_search.py
-├── check_split.py
-├── eda_labels.py
+├── train_resnet.py              # ResNet50 학습 실행 스크립트
+├── train_efficientnet.py        # EfficientNet-B1 학습 실행 스크립트
+├── test_resnet.py               # ResNet50 테스트 평가
+├── test_efficientnet.py         # EfficientNet-B1 테스트 평가
+├── ensemble_alpha_search.py     # Validation 기반 alpha 탐색
+├── ensemble_threshold_search.py # Recall 제약 기반 threshold 탐색
+├── check_split.py               # train/val/test 분할 검증
+├── eda_labels.py                # 라벨 분포 EDA 분석
 ├── README.md
 └── LICENSE
 ```
