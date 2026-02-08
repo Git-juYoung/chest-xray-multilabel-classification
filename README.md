@@ -8,7 +8,7 @@
 
 ## Dataset
 
-- **MIMIC-CXR-JPG (v2.0.0)** 사용
+- **MIMIC-CXR-JPG** 사용
 - CheXpert labeler 기반 14개 질병 라벨
 - 본 실험에서는 **No Finding을 제외한 13-class multi-label 설정**을 사용하였다.
 
