@@ -6,6 +6,14 @@
 
 ---
 
+## Dataset
+
+- **MIMIC-CXR-JPG (v2.0.0)** 사용
+- CheXpert labeler 기반 14개 질병 라벨
+- 본 실험에서는 **No Finding을 제외한 13-class multi-label 설정**을 사용하였다.
+
+---
+
 ## Core Design Decisions
 
 - 불완전 라벨(`NaN`, `-1`)을 고려한 **Mask 기반 BCE 학습 설계**
@@ -27,6 +35,8 @@
 
 의료 데이터에서는 **Recall(민감도)**가 핵심 제약 조건이 되기 쉽다.  
 따라서 본 프로젝트는 최종 단계에서 **“Recall ≥ r” 제약 하에서 Precision을 최대화하는 Class-wise Threshold**를 탐색한다.
+또한 동일 환자(subject_id)에 대해 여러 이미지가 존재하는 데이터 구조를 고려하여, 
+data leakage를 방지하기 위해 subject_id 기준으로 train/validation/test를 분할하였다.
 
 ---
 
