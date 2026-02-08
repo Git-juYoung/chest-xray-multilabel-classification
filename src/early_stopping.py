@@ -7,7 +7,7 @@ class EarlyStopping:
         self.best_loss = float("inf")
         self.counter = 0
 
-    def step(self, val_loss: float, model) -> bool:
+    def step(self, val_loss: float, model):
         if val_loss < self.best_loss:
             self.best_loss = val_loss
             self.counter = 0
